@@ -5,6 +5,6 @@ A simple User's Manual for this Web App showing the basic functions of the app.
 It may change!
 
 
-# User Manual Link
+# User's Manual Link
 
 Hosted at: http://am1120.ddns.net/manual
