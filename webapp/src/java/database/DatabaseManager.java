@@ -7,8 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Car;
+import model.Problem;
 
 /**
  * A class that handles Database Operations
@@ -139,5 +143,144 @@ public class DatabaseManager {
         // Was added sucessfuly
         return true;
     }
+    
+    /* * * Car Methods * * */
+    public List<Car> searchCars(String maker, String model, String year, String engine){
+        // Status check
+        if (!IS_CONNECTED) {
+            return null;
+        }
+
+        ResultSet rs = null;
+        List<Car> result = new ArrayList<>();
+        try {
+            // Prepare statement to db
+            Statement stmt = conn.createStatement();
+
+            // Run a query to fetch requested maker
+            rs = stmt.executeQuery("SELECT * FROM car_maker WHERE maker = '" + maker + "'");
+
+            if (rs.next()) {
+                // We found a maker return it as result set
+                System.out.println("Maker found");
+                int maker_id = rs.getInt("m_id");
+                
+                rs = stmt.executeQuery("SELECT * FROM car_model WHERE maker_id LIKE '" + maker_id 
+                        + "' " + "AND model LIKE '" + model 
+                        + "' " + "AND model_year LIKE '" + year
+                        + "' " + "AND engine LIKE '" + engine +"'");
+                
+              
+                while (rs.next()){
+                    // Get car info
+                    Car newCar = new Car(maker,String.valueOf(rs.getInt("mod_id")),rs.getString("model"),rs.getString("model_year"),rs.getString("engine"));
+                    System.out.println("New car: " + newCar.toString());
+                    result.add(newCar);
+                }
+            } else {
+                System.out.println("No Cars found");
+                return null;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SearchCar exception:" + e.getMessage());
+        }
+
+        
+        return result;
+    }
+    
+    
+    /* * * Problem Methods * * */
+    public List<Problem> getProblems(int model_id){
+        
+         // Status check
+        if (!IS_CONNECTED) {
+            return null;
+        }
+
+        ResultSet rs = null;
+        List<Problem> result = new ArrayList<>();
+        try {
+            // Prepare statement to db
+            Statement stmt = conn.createStatement();
+
+            // Run a query to fetch requested maker
+            rs = stmt.executeQuery("SELECT * FROM problems WHERE model_id = '" + model_id + "'");
+
+            while (rs.next()) {
+                    Problem newProblem = new Problem(rs.getInt("p_id"),rs.getInt("model_id"),rs.getString("description"),
+                            rs.getString("solution"),rs.getDate("created_at"),rs.getString("status") );
+                    System.out.println("New car: " + newProblem.toString());
+                    result.add(newProblem);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SearchProblem exception:" + e.getMessage());
+        }
+
+        
+        return result;
+        
+    }
+    
+    public Problem getProblemDetails(int p_id){
+        
+        
+        
+         // Status check
+        if (!IS_CONNECTED) {
+            return null;
+        }
+
+        ResultSet rs = null;
+        Problem problem = null;
+        try {
+            // Prepare statement to db
+            Statement stmt = conn.createStatement();
+
+            // Run a query to fetch requested maker
+            rs = stmt.executeQuery("SELECT * FROM problems WHERE p_id = '" + p_id + "'");
+
+            if (rs.next()) {
+                    problem = new Problem(rs.getInt("p_id"),rs.getInt("model_id"),rs.getString("description"),
+                            rs.getString("solution"),rs.getDate("created_at"),rs.getString("status") );
+                    System.out.println("Problem details: " + problem.toString());
+                   
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SearchProblem exception:" + e.getMessage());
+        }
+
+        
+        return problem;
+        
+    }
+    
+    /* * * Closing methods * * */
+    public static void close(Connection connection) {
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException e) { }
+		}
+	}
+
+	public static void close(Statement statement) {
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (SQLException e) { }
+		}
+	}
+
+	public static void close(ResultSet resultSet) {
+		if (resultSet != null) {
+			try {
+				resultSet.close();
+			} catch (SQLException e) { }
+		}
+	}
 
 }

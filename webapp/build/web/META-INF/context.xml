@@ -1,2 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/CarMechanic"/>
+<Context crossContext="true" antiJARLocking="true" path="/CarMechanic">
+
+
+
+	
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+	
+   <Resource name="jdbc/car_mechanic" auth="Container" 
+		type="javax.sql.DataSource"
+		maxActive="100" maxIdle="30" maxWait="10000"
+		username="root" 
+		password="" 
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost/exampledb"/>
+</Context>

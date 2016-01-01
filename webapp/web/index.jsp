@@ -1,5 +1,5 @@
 <%-- 
-    Author     : Alexander
+    Author     : Alexander Patras
      
     Home Page Or aka Search Page
 --%>
@@ -7,6 +7,10 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%String serverUrl = "http://localhost:8081/searchservlet";%>
+<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <html>
     <head>
         <%-- Include head section --%>
@@ -28,7 +32,22 @@
         <%@ include file="static/navbar.jsp" %>
         <% }%>
 
-        %>
+
+
+
+
+        <sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver"
+                           url="jdbc:mysql://localhost/car_mechanic"
+                           user="root"  password=""/>
+
+        <sql:query dataSource="${snapshot}" var="result">
+            SELECT * from car_maker;
+        </sql:query>
+
+        <sql:query dataSource="${snapshot}" var="resultmodel">
+            SELECT * from car_model;
+        </sql:query>
+
 
 
         <div class="panel panel-default center-block" style="width: 70%;">
@@ -63,23 +82,20 @@
                                 <label for="inputSearch" class="col-sm-3 control-label">Κατασκευαστής: </label>
 
                                 <div class="col-sm-3">
-                                    <select class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                    <select name="maker" class="form-control">
+                                        <c:forEach var="row" items="${result.rows}">
+                                            <option value="${row.maker}"><c:out value="${row.maker}"/></option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                                 <label for="inputSearch" class="col-sm-3 control-label">Μοντέλο: </label>
 
                                 <div class="col-sm-3">
-                                    <select class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                    <select name="model" class="form-control">
+                                        <option value="%">Όλα</option>
+                                        <c:forEach var="row" items="${resultmodel.rows}">
+                                            <option value="${row.model}"><c:out value="${row.model}"/></option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                             </div>
@@ -91,23 +107,21 @@
                                 <label for="inputSearch" class="col-sm-3 control-label">Έτος κατασκευής: </label>
 
                                 <div class="col-sm-3">
-                                    <select class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                    <select name="year" class="form-control">
+                                        <option value="%">Όλα</option>
+                                        <c:forEach var="row" items="${resultmodel.rows}">
+                                            <option value="${row.model_year}"><c:out value="${row.model_year}"/></option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                                 <label for="inputSearch" class="col-sm-3 control-label">Κωδικός κινητήρα: </label>
 
                                 <div class="col-sm-3">
-                                    <select class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                    <select name="engine" class="form-control">
+                                        <option value="%">Όλα</option>
+                                        <c:forEach var="row" items="${resultmodel.rows}">
+                                            <option value="${row.engine}"><c:out value="${row.engine}"/></option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                             </div>
@@ -131,14 +145,23 @@
                     <div class="col-md-6 center-block">
                         <h1 style="text-align: center;">Αποτελέσματα αναζήτησης</h1>
                         <table class="table table-hover">
-                            <th>Col 1</th><th>Col 2</th><th>Col 3</th><th>Col 4</th>
-                            <tr><td>Test</td><td>Test</td><td>Test</td><td>Test</td></tr>
+                            <th>Κατασκευαστής</th><th>Μοντέλο</th><th>Έτος</th><th>Κινητήρας</th>
+                                <c:if test="${not empty result}">
+                                 
+                                    <c:forEach var="car" items="${searchresult}">
+                                    <tr>
+                                        <td>${car.maker}</td>
+                                        <td>${car.model}</td>
+                                        <td>${car.year}</td>
+                                        <td>${car.engine}</td>
+                                        <td><a href="carview?s=${car.model_id}">Problems</a></td>
+                                    </tr>
 
-                            <tr><td>Test</td><td>Test</td><td>Test</td><td>Test</td></tr>
 
-                            <tr><td>Test</td><td>Test</td><td>Test</td><td>Test</td></tr>
+                                </c:forEach>
+                            </c:if>
+                            <%-- <tr><td>Test</td><td>Test</td><td>Test</td><td>Test</td></tr> --%>
 
-                            <tr><td>Test</td><td>Test</td><td>Test</td><td>Test</td></tr>
                         </table>
 
                     </div>
