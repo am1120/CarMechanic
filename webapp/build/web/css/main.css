@@ -24,3 +24,33 @@
 .mainnav {
     width: 50%;
 }
+
+.problemtable {
+    overflow-y:scroll; 
+    height:200px;  
+    position:absolute;
+}
+
+
+#small-img li {
+  width: 33.3%;
+  float: left;
+  margin-top: 20px;
+  
+}
+
+#small-img ul {
+    list-style: outside none none;
+}
+
+img {
+  border: 0 none;
+  display: inline-block;
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.row {
+    margin-top: 10px;
+}

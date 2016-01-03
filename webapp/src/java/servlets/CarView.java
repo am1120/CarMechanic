@@ -39,14 +39,19 @@ public class CarView extends HttpServlet {
         int model_id = Integer.parseInt(request.getParameter("s"));
         
         DatabaseManager db = new DatabaseManager();
+        
         List<Problem> result;
         //Get problems for one car
         result = db.getProblems(model_id);
+        
+        // Get Car info
+        Car carInfo = db.getCar(model_id);
         
         if (result != null) {
             
             request.setAttribute("result", "ok");
             request.setAttribute("searchresult", result);
+            request.setAttribute("carinfo",carInfo);
             
         } else {
             

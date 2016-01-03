@@ -14,6 +14,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Car;
+import model.Comment;
 import model.Problem;
 
 /**
@@ -41,10 +43,18 @@ public class ProblemView extends HttpServlet {
         //Get problem details
         result = db.getProblemDetails(p_id);
         
+        // Get Car info
+        Car carInfo = db.getCar(result.getModel_id());
+        
+        // Get any comments
+        List<Comment> comments = db.getComments(result.getP_id());
+        
         if (result != null) {
             
             request.setAttribute("result", "ok");
             request.setAttribute("searchresult", result);
+            request.setAttribute("carinfo", carInfo);
+            request.setAttribute("comments",comments);
             
         } else {
             

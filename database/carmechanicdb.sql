@@ -63,6 +63,7 @@ c_id int NOT NULL AUTO_INCREMENT,
 prob_id int,
 author_id int,
 create_at DATETIME,
+content TEXT,
 PRIMARY KEY (c_id),
 FOREIGN KEY (prob_id) REFERENCES problems(p_id)
 );

@@ -14,6 +14,7 @@ import model.CarDAO;
 import exceptions.ApplicationException;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.StringTokenizer;
 import model.Car;
 
 /**
@@ -54,24 +55,45 @@ public class searchservlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //Get Request parameters from form
-        String maker = request.getParameter("maker");
-        String model = request.getParameter("model");
-        String year = request.getParameter("year");
-        String engine = request.getParameter("engine");
+        String formtype = request.getParameter("formtype");
 
-        List<Car> result;
-        int success = 0;
-        //try {
+        List<Car> result = null;
 
-        DatabaseManager db = new DatabaseManager();
+        if (formtype.equalsIgnoreCase("textform")) {
+            System.out.println("text form");
+            String searchString = request.getParameter("searchString");
+            searchString = searchString.toUpperCase();
 
-        result = db.searchCars(maker, model, year, engine);
-        /*Using PRG Pattern.
-         * Instead of forwarding from doPost() method, we are doing a
-         * redirection to avoid duplicate form submission.
-         */
+            String[] arguments = searchString.split("\\s");
+
+            DatabaseManager db = new DatabaseManager();
+
+            result = db.searchCars(arguments);
+
+        }
+
+        if (formtype.equalsIgnoreCase("selectform")) {
+
+            String maker = request.getParameter("maker");
+            String model = request.getParameter("model");
+            String year = request.getParameter("year");
+            String engine = request.getParameter("engine");
+
+           
+            //try {
+
+            DatabaseManager db = new DatabaseManager();
+
+            result = db.searchCars(maker, model, year, engine);
+            /*Using PRG Pattern.
+             * Instead of forwarding from doPost() method, we are doing a
+             * redirection to avoid duplicate form submission.
+             */
+
+        }
+
         if (result != null) {
-            success = 1;
+            
             request.setAttribute("result", "ok");
             request.setAttribute("searchresult", result);
             Enumeration enuma = request.getAttributeNames();
@@ -79,15 +101,16 @@ public class searchservlet extends HttpServlet {
                 System.out.println(enuma.nextElement());
             }
         } else {
-            //} catch (ApplicationException e) {
+                //} catch (ApplicationException e) {
             //Log the error
             request.setAttribute("error", "ERROR ON SEARCH");
         }
+
         RequestDispatcher view = request
                 .getRequestDispatcher("index.jsp");
         view.forward(request, response);
         //response.sendRedirect("searchresult.do?s="
-          //      + success);
+        //      + success);
     }
 
     /**

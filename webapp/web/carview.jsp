@@ -32,59 +32,77 @@
         <%@ include file="static/navbar.jsp" %>
         <% }%>
 
-
-
-
-
-        <sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver"
-                           url="jdbc:mysql://localhost/car_mechanic"
-                           user="root"  password=""/>
-
-        <sql:query dataSource="${snapshot}" var="result">
-            SELECT * from car_maker;
-        </sql:query>
-
-        <sql:query dataSource="${snapshot}" var="resultmodel">
-            SELECT * from car_model;
-        </sql:query>
-
-
-
         <div class="panel panel-default center-block" style="width: 70%;">
+            <ol class = "breadcrumb">
+                <li><a href = "index.jsp">Home</a></li>
+                <li class="active">Car :
+                    <c:if test="${not empty result}">
+                        ${carinfo.maker} ${carinfo.model} ${carinfo.year} ${carinfo.engine}       
+                    </c:if>
+                </li>
 
+            </ol>
             <div class="panel-body container-fluid">
                 <div class="row">
                     <div class="col-md-6 center-block">
-                       <h1 style="text-align: center;">Πληροφορίες μοντέλου</h1>
-                        
+                        <h1 style="text-align: center;">Πληροφορίες μοντέλου</h1>
+                        <div class="col-md-3 pull-left">
+                            <a href="index.jsp"><button type="button" class="btn  center-block btn-default">Πίσω</button>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <c:if test="${not empty result}">
+                                        ${carinfo.maker} ${carinfo.model} ${carinfo.year} ${carinfo.engine}       
+                                    </c:if>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+
+                            <img src="img/image.png" alt=""/>
+                        </div>
                     </div>
                 </div>
-                
+                <div class="row">
+                    <div class="col-md-6 center-block">
+                        <div style="margin-right: 100px;" class="col-md-3">
+                            <a href="insertproblem?type=solved&mid=${carinfo.model_id}"><button action="insertproblem" type="button" class="btn   btn-default">Προσθήκη Λυμένου Προβλήματος</button></a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="insertproblem?type=unsolved&mid=${carinfo.model_id}"><button type="button" class="btn  btn-default">Προσθήκη Άλυτου Προβλήματος</button></a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
-        <div class="panel panel-default center-block" style="width: 70%;">
+            <hr/>
             <div class="panel-body container-fluid">
                 <div class="row">
                     <div class="col-md-6 center-block">
                         <h1 style="text-align: center;">Προβλήματα</h1>
-                        <table class="table table-hover">
-                            <th>ID</th><th>Περιγραφή</th><th>Λύση</th><th>Κατάσταση</th>
+                        <table id="problemtable" class="table table-hover">
+                            <thead>
+                                <th>ID</th><th>Περιγραφή</th><th>Λύση</th><th>Κατάσταση</th>
+                            </thead>
+                            <tbody>
                                 <c:if test="${not empty result}">
-                                 
+
                                     <c:forEach var="problem" items="${searchresult}">
-                                    <tr>
-                                        <td>${problem.p_id}</td>
-                                        <td>${problem.description}</td>
-                                        <td>${problem.solution}</td>
-                                        <td>${problem.status}</td>
-                                        <td><a href="problemview?s=${problem.p_id}">Details</a></td>
-                                    </tr>
+                                        <tr>
+                                            <td>${problem.p_id}</td>
+                                            <td>${problem.description}</td>
+                                            <td>${problem.solution}</td>
+                                            <td>${problem.status}</td>
+                                            <td><a href="problemview?s=${problem.p_id}">Details</a></td>
+                                        </tr>
 
 
-                                </c:forEach>
-                            </c:if>
-                            <%-- <tr><td>Test</td><td>Test</td><td>Test</td><td>Test</td></tr> --%>
-
+                                    </c:forEach>
+                                </c:if>
+                                <%-- <tr><td>Test</td><td>Test</td><td>Test</td><td>Test</td></tr> --%>
+                            </tbody>
                         </table>
 
                     </div>

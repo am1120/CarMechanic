@@ -63,7 +63,8 @@
                             <div class="form-group">
                                 <label for="inputSearch" class="col-sm-2 control-label">Αναζήτηση: </label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputSearch" placeholder="Μάρκα & Μοντέλο Αυτοκινήτου">
+                                     <input type="hidden" name="formtype" value="textform" />
+                                    <input type="text" name="searchString" class="form-control" id="inputSearch" placeholder="Μάρκα & Μοντέλο Αυτοκινήτου">
                                 </div>
                             </div>
 
@@ -74,7 +75,7 @@
                 </div>
                 <form method="post" action="searchservlet">
                     <div class="row">
-
+                         <input type="hidden" name="formtype" value="selectform" />
                         <div class="col-md-6 center-block">
                             <h2 style="text-align: center;"> Ή </h2>
                             <div class="first-row">
