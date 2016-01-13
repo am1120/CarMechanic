@@ -31,7 +31,7 @@ public class DatabaseManager {
     /* * * Database config * * */
     private static final String DB = "jdbc:mysql://localhost:3306/car_mechanic";
     private static final String DBUSER = "www";
-    private static final String DBPSW = "";
+    private static final String DBPSW = "123456";
 
     /* * * Database Connection * * */
     Connection conn = null;
@@ -103,18 +103,18 @@ public class DatabaseManager {
      * @param mis
      * @return
      */
-    public boolean addUser(String username, Uthldap ldap) {
+    public ResultSet addUser(String username, Uthldap ldap) {
 
         if (!ldap.auth() || !IS_CONNECTED) {
             // Not authenticated or no db connection
-            return false;
+            return null;
         }
         try {
             // Prepare a statement to insert a user
             PreparedStatement pstmt
                     = conn.prepareStatement(
                             "INSERT INTO users(username, password, account_type, role, first_name, "
-                            + "last_name, email, notifications, misc) VALUES (?,?,?,?,?,?,?,?,?)");
+                            + "last_name, email, notifications, misc,birthdate) VALUES (?,?,?,?,?,?,?,?,?,?)");
 
             pstmt.setString(1, username);
             pstmt.setString(2, "NULL"); // LDAP Doesnt need password
@@ -125,15 +125,17 @@ public class DatabaseManager {
             pstmt.setString(7, ldap.getMail());
             pstmt.setBoolean(8, false);
             pstmt.setString(9, "NULL");
+            pstmt.setString(10, ldap.getBirthYear());
 
             // Execute insert query
             boolean result = pstmt.execute();
-
+            ResultSet rs = pstmt.getResultSet();
             if (result) {
                 System.out.println("ERROR: Wrong Query");
-                return false;
+                return null;
             } else {
                 System.out.println("User " + username + " was added successfully");
+                return rs;
             }
 
         } catch (SQLException e) {
@@ -142,7 +144,7 @@ public class DatabaseManager {
         }
 
         // Was added sucessfuly
-        return true;
+        return null;
     }
 
     /* * * Car Methods * * */
@@ -287,7 +289,37 @@ public class DatabaseManager {
         return result;
 
     }
+    
+  public List<Problem> getUserProblems(int user_id) {
+ 
+        // Status check
+        if (!IS_CONNECTED) {
+            return null;
+        }
+               
+        ResultSet rs = null;
+        List<Problem> result = new ArrayList<>();
+        try {
+            // Prepare statement to db
+            Statement stmt = conn.createStatement();
 
+            // Run a query to fetch requested maker
+            rs = stmt.executeQuery("SELECT * FROM problems WHERE user_id = '" + user_id + "'");
+
+            while (rs.next()) {
+                Problem newProblem = new Problem(rs.getInt("p_id"), rs.getInt("model_id"), rs.getString("description"),
+                        rs.getString("solution"), rs.getDate("created_at"), rs.getString("status"));
+                System.out.println("Problem fetched: " + newProblem.toString());
+                result.add(newProblem);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SearchProblem exception:" + e.getMessage());
+        }
+
+        return result;
+
+    }
     public Problem getProblemDetails(int p_id) {
 
         // Status check

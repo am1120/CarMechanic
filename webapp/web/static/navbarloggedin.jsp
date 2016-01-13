@@ -24,9 +24,9 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="index.jsp">Αρχική <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">Πληροφορίες</a></li>
-                <li><a href="#">Επικοινωνία</a></li>
+                <li><a href="index.jsp">Αρχική <span class="sr-only">(current)</span></a></li>
+                <li><a href="about.jsp">Πληροφορίες</a></li>
+                <li><a href="contact.jsp">Επικοινωνία</a></li>
 
             </ul>
 
@@ -34,7 +34,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Καλώς ορίσατε, <%=uName%> <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Προφίλ</a></li>
+                        <li><a href="UserProfile?id=<%=userId%>">Προφίλ</a></li>
                         <li role="separator" class="divider"></li>
                         <li>
                             <form action="logout" method="post">

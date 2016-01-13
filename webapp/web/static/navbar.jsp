@@ -26,8 +26,8 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a href="index.jsp">Αρχική <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">Πληροφορίες</a></li>
-                <li><a href="#">Επικοινωνία</a></li>
+                <li><a href="about.jsp">Πληροφορίες</a></li>
+                <li><a href="contact.jsp">Επικοινωνία</a></li>
                 
             </ul>
 

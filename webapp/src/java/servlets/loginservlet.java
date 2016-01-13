@@ -95,16 +95,36 @@ public class loginservlet extends HttpServlet {
             // Check in our DB
             ResultSet rs = db.getUser(user);
             String uName = "NULL";
+            String uEmail = "NULL";
+            String accType = "NULL";
+            String otherInfo = "NULL";
+            String birthDate = "NULL";
+            int userId = -1;
             try{
             if(rs != null) {
                 // User is already in our db
                 System.out.println("LoginServlet: Already in our db");
+                userId = rs.getInt("u_id");
                 uName = rs.getString("first_name");
+                uEmail = rs.getString("email");
+                accType = rs.getString("account_type");
+                otherInfo = rs.getString("misc");
+                birthDate = rs.getString("birthdate");
             }else{
                 // Not in our db, insert him
                 System.out.println("LoginServlet: Adding in our db");
-                db.addUser(user, ldap);
+                ResultSet addrs = db.addUser(user, ldap);
+                if(addrs != null){
+                userId = addrs.getInt("u_id");
+                }
+                else{
+                 userId = -1;
+                }
                 uName = ldap.getName();
+                uEmail = ldap.getMail();
+                accType = "UTH LDAP";
+                otherInfo = ldap.getDept();    
+                birthDate = ldap.getBirthYear();
             }
             }catch(SQLException e){
                 System.out.println("LoginServlet: SQLException" + e.getMessage());
@@ -113,8 +133,12 @@ public class loginservlet extends HttpServlet {
             // Login succesful, start session
             session = request.getSession();
             session.setAttribute("user", user);
+            session.setAttribute("userId", userId);
             session.setAttribute("uName",uName);
-            
+            session.setAttribute("uEmail",uEmail);
+            session.setAttribute("accType", accType);
+            session.setAttribute("otherInfo",otherInfo);
+            session.setAttribute("birthDate", birthDate);
             
             //setting session to expiry in 30 mins
             session.setMaxInactiveInterval(60 * 60);
