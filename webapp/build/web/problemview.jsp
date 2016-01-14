@@ -20,12 +20,16 @@
     <body>
 
         <%
-            //If logged in, get usrname
+            //If logged in, get username
             String user = null;
             String uName = null;
+            String userId = null;
+            String role = null;
             if (session.getAttribute("user") != null) {
                 user = (String) session.getAttribute("user");
                 uName = (String) session.getAttribute("uName");
+                userId = "" + (int) session.getAttribute("userId");
+                role = (String) session.getAttribute("role");
         %>
         <%@ include file="static/navbarloggedin.jsp" %>
         <% } else { %>
@@ -87,8 +91,9 @@
 
                     </div>
                 </div>
-
+                <%if (role != null && role.equals("1")) { %>
                 <div class="panel-body container-fluid">
+
                     <div class="row">
                         <div class="col-md-6 center-block">
                             <div style="margin-right: 100px;" class="col-md-3">
@@ -103,6 +108,12 @@
                         </div>
                     </div>
                 </div>
+                <%} else { %>
+                <div class="alert alert-info center-block" role="alert" style="width: 80%;">
+                    Πρέπει να είστε συνδεδεμένος για να μπορείτε να προσθέσετε μια λύση ή φωτογραφία.
+                </div>
+
+                <%}%>
             </div>
 
             <div class="panel-body container-fluid">
@@ -122,6 +133,7 @@
 
             <hr/>
             <div class="panel-body container-fluid">
+                <%if (role != null && role.equals("1")) { %>
                 <div class="row">
                     <div class="col-md-6 center-block">
 
@@ -161,6 +173,17 @@
 
                     </div>
                 </div>
+                <%} else {%>
+                <div class="row">
+                    <div class="col-md-6 center-block">
+
+                        <div class="alert alert-info center-block" role="alert" style="width: 80%;">
+                            Πρέπει να είστε συνδεδεμένος για να μπορείτε να προβάλετε ή να αποστείλετε σχόλια.
+                        </div>
+
+                    </div>
+                </div>
+                <%}%>
             </div>
         </div>
 

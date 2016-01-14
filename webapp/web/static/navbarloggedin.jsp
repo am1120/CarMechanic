@@ -3,8 +3,11 @@
 <div class="row heading">
     <div class="col-md-4 logo center-block">
         <div class="page-header center-block">
-            <h1 class='center-block'>CarMechanic <br><small>Car Mechanic</small></h1>
+            <div class="logo">
+            <img src="img/logo.png" alt=""/>
         </div>
+        </div>
+        
     </div>
 
 </div>

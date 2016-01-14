@@ -48,10 +48,12 @@ public class Uthldap {
         } catch (AuthenticationException ex) {
               auth = false;
             System.out.println("LDAP: Authentication exception");
+            return;
 
         }catch (NamingException ex) {
              auth=false;
             System.out.println("LDAP: Naming exception");
+            return;
         }
         
         auth = true;

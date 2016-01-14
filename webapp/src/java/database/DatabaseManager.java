@@ -12,9 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.CMUser;
 import model.Car;
 import model.Comment;
 import model.Problem;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import model.Category;
+import utilities.CMRoles;
 
 /**
  * A class that handles Database Operations
@@ -97,10 +106,29 @@ public class DatabaseManager {
     }
 
     /**
-     * Add a user to our db - Currently with LDAP
+     * *
+     * Searches user db to find if a username already exists
      *
      * @param username
-     * @param mis
+     * @return
+     */
+    public boolean userExists(String username) {
+
+        ResultSet rs = getUser(username);
+
+        if (rs != null) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * Add a user to our db who used LDAP to login for first time
+     *
+     * @param username
+     * @param ldap
      * @return
      */
     public ResultSet addUser(String username, Uthldap ldap) {
@@ -119,7 +147,7 @@ public class DatabaseManager {
             pstmt.setString(1, username);
             pstmt.setString(2, "NULL"); // LDAP Doesnt need password
             pstmt.setString(3, "LDAP");
-            pstmt.setInt(4, 1); // Role 1 - Simple user 
+            pstmt.setInt(4, CMRoles.SIMPLE_USER); // Role 1 - Simple user 
             pstmt.setString(5, ldap.getName());
             pstmt.setString(6, ldap.getName());
             pstmt.setString(7, ldap.getMail());
@@ -147,13 +175,160 @@ public class DatabaseManager {
         return null;
     }
 
+    /**
+     * Add a user to our db who used regular sign up
+     *
+     * @param username
+     * @param ldap
+     * @return
+     */
+    public ResultSet addUser(CMUser user) {
+
+        if (!IS_CONNECTED) {
+            // No db connection
+            return null;
+        }
+        try {
+            // Prepare a statement to insert a user
+            PreparedStatement pstmt
+                    = conn.prepareStatement(
+                            "INSERT INTO users(username, password, account_type, role, first_name, "
+                            + "last_name, email, notifications, misc,birthdate) VALUES (?,?,?,?,?,?,?,?,?,?)");
+
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getAccountType());
+            pstmt.setInt(4, user.getRole());
+            pstmt.setString(5, user.getUname());
+            pstmt.setString(6, user.getUname());
+            pstmt.setString(7, user.getEmail());
+            pstmt.setBoolean(8, false);
+            pstmt.setString(9, user.getMisc());
+            pstmt.setString(10, user.getBirthDate());
+
+            // Execute insert query
+            boolean result = pstmt.execute();
+            ResultSet rs = pstmt.getResultSet();
+            if (result) {
+                System.out.println("ERROR: Wrong Query");
+                return null;
+            } else {
+                System.out.println("User " + user.getUsername() + " was added successfully");
+                return rs;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("ERROR: Exception" + e.getMessage());
+
+        }
+
+        // Was added sucessfuly
+        return null;
+    }
+
     /* * * Car Methods * * */
+    public Map<Integer, String> getModels(String maker_id) {
+        // Status check
+        if (!IS_CONNECTED) {
+            return null;
+        }
+
+        ResultSet rs = null;
+        Map<Integer, String> result = new HashMap<>();
+
+        try {
+            // Prepare statement to db
+            Statement stmt = conn.createStatement();
+
+            // Run a query to fetch requested maker
+            rs = stmt.executeQuery("SELECT * FROM car_model WHERE ManufacturerID = '" + maker_id + "'");
+
+            while (rs.next()) {
+                // Get Model
+                result.put(rs.getInt("ModelsId"), rs.getString("ModelDescription"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("getModels exception:" + e.getMessage());
+        }
+
+        return result;
+
+    }
+
+    public Map<Integer, String> getYears(String model_id) {
+        // Status check
+        if (!IS_CONNECTED) {
+            return null;
+        }
+
+        ResultSet rs = null;
+        Map<Integer, String> result = new HashMap<>();
+
+        try {
+            // Prepare statement to db
+            Statement stmt = conn.createStatement();
+
+            // Run a query to fetch requested maker
+            rs = stmt.executeQuery("SELECT * FROM car_model WHERE ModelsID = '" + model_id + "'");
+
+            while (rs.next()) {
+                // Get Model
+                String startYear = String.valueOf(rs.getInt("YearBegin"));
+                String endYear = String.valueOf(rs.getInt("YearEnd"));
+                result.put(rs.getInt("ModelsId"), startYear + " - " + endYear);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("getYears exception:" + e.getMessage());
+        }
+
+        return result;
+
+    }
+
+    public Map<Integer, String> getEngine(String model_id) {
+        // Status check
+        if (!IS_CONNECTED) {
+            return null;
+        }
+
+        ResultSet rs = null;
+        Map<Integer, String> result = new HashMap<>();
+
+        try {
+            // Prepare statement to db
+            Statement stmt = conn.createStatement();
+
+            // Run a query to fetch requested maker
+            rs = stmt.executeQuery("SELECT * FROM car_model WHERE ModelsID = '" + model_id + "'");
+
+            while (rs.next()) {
+                // Get Model
+
+                result.put(rs.getInt("ModelsId"), rs.getString("SubModelDescription1"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("getEngine exception:" + e.getMessage());
+        }
+
+        return result;
+
+    }
+
     public List<Car> searchCars(String maker, String model, String year, String engine) {
         // Status check
         if (!IS_CONNECTED) {
             return null;
         }
 
+        String startYear = "%";
+        String endYear = "%";
+        if (!year.equals("%")) {
+            startYear = year.substring(0, 4);
+            endYear = year.substring(7, 11);
+        }
         ResultSet rs = null;
         List<Car> result = new ArrayList<>();
         try {
@@ -168,14 +343,15 @@ public class DatabaseManager {
                 System.out.println("Maker found");
                 int maker_id = rs.getInt("m_id");
 
-                rs = stmt.executeQuery("SELECT * FROM car_model WHERE maker_id LIKE '" + maker_id
-                        + "' " + "AND model LIKE '" + model
-                        + "' " + "AND model_year LIKE '" + year
-                        + "' " + "AND engine LIKE '" + engine + "'");
+                rs = stmt.executeQuery("SELECT * FROM car_model WHERE ManufacturerID LIKE '" + maker_id
+                        + "' " + "AND ModelDescription LIKE '" + model
+                        + "' " + "AND YearBegin LIKE '" + startYear
+                        + "' " + "AND YearEnd LIKE '" + endYear
+                        + "' " + "AND SubModelDescription1 LIKE '" + engine + "'");
 
                 while (rs.next()) {
                     // Get car info
-                    Car newCar = new Car(maker, String.valueOf(rs.getInt("mod_id")), rs.getString("model"), rs.getString("model_year"), rs.getString("engine"));
+                    Car newCar = new Car(maker, String.valueOf(rs.getInt("ModelsID")), rs.getString("ModelDescription"), rs.getString("YearBegin") + " - " + rs.getString("YearEnd"), rs.getString("SubModelDescription1"));
                     System.out.println("New car: " + newCar.toString());
                     result.add(newCar);
                 }
@@ -203,12 +379,19 @@ public class DatabaseManager {
                 result = searchCars(arguments[0], arguments[1], "%", "%");
                 break;
             case 3: //maker, model, year
-                result = searchCars(arguments[0], arguments[2], arguments[3], "%");
+                //result = searchCars(arguments[0], arguments[2], arguments[3], "%");
+                // Ignore for now
+                result = searchCars(arguments[0], arguments[1], "%", "%");
+
                 break;
             case 4: //maker,model,year, engine
-                result = searchCars(arguments[0], arguments[1], arguments[2], arguments[3]);
+                //result = searchCars(arguments[0], arguments[1], arguments[2], arguments[3]);
+                // ignore for now
+                result = searchCars(arguments[0], arguments[1], "%", "%");
+
                 break;
             default:
+                result = searchCars(arguments[0], arguments[1], "%", "%");
                 System.out.println("Search arguments incorrect");
                 break;
         }
@@ -226,16 +409,16 @@ public class DatabaseManager {
             Statement stmt = conn.createStatement();
 
             // Run a query to fetch requested maker
-            rs = stmt.executeQuery("SELECT * FROM car_model WHERE mod_id = '" + modelid + "'");
+            rs = stmt.executeQuery("SELECT * FROM car_model WHERE ModelsID = '" + modelid + "'");
 
             if (rs.next()) {
                 // We found the model
 
-                int maker_id = rs.getInt("maker_id");
-                String model = rs.getString("model");
-                String year = rs.getString("model_year");
-                String engine = rs.getString("engine");
-                String modelId = String.valueOf(rs.getInt("mod_id"));
+                int maker_id = rs.getInt("ManufacturerID");
+                String model = rs.getString("ModelDescription");
+                String year = rs.getString("YearBegin") + " - " + rs.getString("YearEnd");
+                String engine = rs.getString("SubModelDescription1");
+                String modelId = String.valueOf(rs.getInt("ModelsID"));
 
                 // Get Maker
                 rsMaker = stmt.executeQuery("SELECT * FROM car_maker WHERE m_id = '" + maker_id + "'");
@@ -259,7 +442,7 @@ public class DatabaseManager {
     }
 
     /* * * Problem Methods * * */
-    public List<Problem> getProblems(int model_id) {
+    public Map<Integer,Category> getProblems(int model_id) {
 
         // Status check
         if (!IS_CONNECTED) {
@@ -267,8 +450,20 @@ public class DatabaseManager {
         }
 
         ResultSet rs = null;
-        List<Problem> result = new ArrayList<>();
+        
+        Map<Integer, String> categories;
+        Map<Integer, Category> catResult = null;
         try {
+
+            // Get Categories
+            categories = getProblemCategories();
+
+            // Create enhanced result
+            catResult = new HashMap<>();
+            for (Map.Entry<Integer, String> entry : categories.entrySet()) {
+                catResult.put(entry.getKey(),new Category(entry.getKey(),entry.getValue()));
+            }
+
             // Prepare statement to db
             Statement stmt = conn.createStatement();
 
@@ -276,27 +471,33 @@ public class DatabaseManager {
             rs = stmt.executeQuery("SELECT * FROM problems WHERE model_id = '" + model_id + "'");
 
             while (rs.next()) {
+                int category_id = rs.getInt("category_id");
                 Problem newProblem = new Problem(rs.getInt("p_id"), rs.getInt("model_id"), rs.getString("description"),
-                        rs.getString("solution"), rs.getDate("created_at"), rs.getString("status"));
+                        rs.getString("solution"), rs.getDate("created_at"), rs.getString("status"),rs.getInt("user_id"),category_id);
                 System.out.println("Problem fetched: " + newProblem.toString());
-                result.add(newProblem);
+                if(catResult == null) System.out.println("Null 1");
+                if(catResult.get(category_id) == null) System.out.println("Null 2");
+                if(catResult.get(category_id).getProblems() == null) System.out.println("Null 3");
+                
+                
+                catResult.get(category_id).getProblems().add(newProblem);
             }
 
         } catch (SQLException e) {
             System.out.println("SearchProblem exception:" + e.getMessage());
         }
 
-        return result;
+        return catResult;
 
     }
-    
-  public List<Problem> getUserProblems(int user_id) {
- 
+
+    public List<Problem> getUserProblems(int user_id) {
+
         // Status check
         if (!IS_CONNECTED) {
             return null;
         }
-               
+
         ResultSet rs = null;
         List<Problem> result = new ArrayList<>();
         try {
@@ -320,6 +521,7 @@ public class DatabaseManager {
         return result;
 
     }
+
     public Problem getProblemDetails(int p_id) {
 
         // Status check
@@ -351,7 +553,7 @@ public class DatabaseManager {
 
     }
 
-    public void insertProblem(String modelId, String description, String solution, String photoPath) {
+    public void insertProblem(String modelId, String description, String solution, String photoPath, int userId, String category) {
 
         // Status check
         if (!IS_CONNECTED) {
@@ -362,11 +564,11 @@ public class DatabaseManager {
             // Prepare a statement to insert a user
             PreparedStatement pstmt
                     = conn.prepareStatement(
-                            "INSERT INTO problems( model_id,description,solution, photo_path,created_at,status)"
-                            + "VALUES (?,?,?,?,?,?)");
+                            "INSERT INTO problems( model_id,description,solution, photo_path,created_at,status,user_id,category_id)"
+                            + "VALUES (?,?,?,?,?,?,?,?)");
 
             pstmt.setInt(1, Integer.parseInt(modelId));
-            pstmt.setString(2, description); 
+            pstmt.setString(2, description);
             pstmt.setString(3, solution);
             pstmt.setString(4, photoPath);
 
@@ -378,6 +580,8 @@ public class DatabaseManager {
             } else {
                 pstmt.setString(6, "SOLVED");
             }
+            pstmt.setInt(7, userId);
+            pstmt.setInt(8, Integer.valueOf(category));
 
             // Execute insert query
             boolean result = pstmt.execute();
@@ -390,9 +594,38 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) {
-            System.out.println("ERROR: Exception" + e.getMessage());
+            System.out.println("ERROR: Exception " + e.getMessage());
 
         }
+
+    }
+
+    public Map<Integer, String> getProblemCategories() {
+
+        // Status check
+        if (!IS_CONNECTED) {
+            return null;
+        }
+
+        ResultSet rs = null;
+        Map<Integer, String> result = new HashMap<>();
+
+        try {
+            // Prepare statement to db
+            Statement stmt = conn.createStatement();
+
+            // Run a query to fetch requested maker
+            rs = stmt.executeQuery("SELECT * FROM problem_categories");
+
+            while (rs.next()) {
+                // Get Categories
+                result.put(rs.getInt("cat_id"), rs.getString("latin_cat_name"));
+            }
+        } catch (SQLException e) {
+            System.out.println("getEngine exception:" + e.getMessage());
+        }
+
+        return result;
 
     }
 
@@ -443,7 +676,7 @@ public class DatabaseManager {
                             + "VALUES (?,?,?,?)");
 
             pstmt.setInt(1, Integer.parseInt(problemId));
-            pstmt.setInt(2, authorId); 
+            pstmt.setInt(2, authorId);
             java.util.Date utilDate = new java.util.Date();
             java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
             pstmt.setDate(3, sqlDate);

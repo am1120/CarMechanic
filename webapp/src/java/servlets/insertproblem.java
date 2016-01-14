@@ -19,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import model.Car;
 
@@ -94,7 +95,8 @@ public class insertproblem extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String UPLOAD_DIRECTORY = "E:\\tomcat\\apache-tomcat-8.0.30\\webapps\\data\\";
+        //String UPLOAD_DIRECTORY = "E:\\tomcat\\apache-tomcat-8.0.30\\webapps\\data\\";
+        String UPLOAD_DIRECTORY = "C:\\Users\\Alexander\\Documents\\NetBeansProjects\\CarMechanic\\web\\img";
         System.out.println("doPOST");
        
 
@@ -104,6 +106,7 @@ public class insertproblem extends HttpServlet {
         String model_id = request.getParameter("modelId");
         String fileName = "NULL";
         
+        HttpSession session = request.getSession();
         
         Part filePart = request.getPart("pic"); // Retrieves <input type="file" name="file">
         if(filePart != null){
@@ -118,9 +121,12 @@ public class insertproblem extends HttpServlet {
         
         // Insert problem
         DatabaseManager db = new DatabaseManager();
-        db.insertProblem(model_id, descriptionText, solutionText, fileName);
+        db.insertProblem(model_id, descriptionText, solutionText, fileName,(int)session.getAttribute("userId"),"1");
         
-        processRequest(request, response);
+       request.setAttribute("s", model_id);
+       RequestDispatcher view = request
+                .getRequestDispatcher("carview?s="+model_id);
+        view.forward(request, response);
     }
 
     /**

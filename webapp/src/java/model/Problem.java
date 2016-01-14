@@ -21,7 +21,9 @@ public class Problem {
     private String photo;
     private Date createdAt;
     private String status;
-
+    private int userId;
+    private int categoryId;
+    
     public int getP_id() {
         return p_id;
     }
@@ -117,6 +119,17 @@ public class Problem {
         this.solution = solution;
         this.createdAt = createdAt;
         this.status = status;
+    }
+
+    public Problem(int p_id, int model_id, String description, String solution, Date createdAt, String status, int userId, int categoryId) {
+        this.p_id = p_id;
+        this.model_id = model_id;
+        this.description = description;
+        this.solution = solution;
+        this.createdAt = createdAt;
+        this.status = status;
+        this.userId = userId;
+        this.categoryId = categoryId;
     }
     
     

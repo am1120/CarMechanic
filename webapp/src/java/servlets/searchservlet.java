@@ -74,11 +74,17 @@ public class searchservlet extends HttpServlet {
 
         if (formtype.equalsIgnoreCase("selectform")) {
 
-            String maker = request.getParameter("maker");
-            String model = request.getParameter("model");
-            String year = request.getParameter("year");
-            String engine = request.getParameter("engine");
-
+            String makerParam = request.getParameter("maker");
+            String modelParam = request.getParameter("model");
+            String yearParam = request.getParameter("year");
+            String engineParam = request.getParameter("engine");
+            
+            
+            String maker = makerParam.split(":")[1];
+            
+            String model = modelParam.split(":")[1];
+            String year = yearParam.split(":")[1];
+            String engine = engineParam.split(":")[1];
            
             //try {
 

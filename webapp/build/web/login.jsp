@@ -3,16 +3,17 @@
 --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html>
     <head>
-         <%-- Include head section --%>
+        <%-- Include head section --%>
         <%@ include file="static/header.jsp" %>
         <title>CarMechanic - Σύνδεση Χρήστη</title>
     </head>
     <body>
-        
+
         <%@ include file="static/navbar.jsp" %>
         <%
             //invalidate the session if exists
@@ -34,9 +35,27 @@
             <div class="row">
 
                 <div class="col-sm-6 center-block">
+                    <c:if test="${result == "ERROR"}">
+                        <div class="alert alert-warning" role="alert">
+                            ${resultMessage}
+                        </div>   
+                    </c:if>
                     <div class="jumbotron">
                         <div class="page-header"><h2> Καλώς ορίσατε! </h2></div>
                         <form method="post" action="login" class="form-horizontal">
+
+                            <div class="form-group">
+
+                                <label for="inputLogin" class="col-sm-2 control-label">Τύπος σύνδεσης</label>
+                                <div class="col-sm-8">
+                                    <select name="inputLogin" class="form-control">
+                                        <option value="ldap">UTH LDAP</option>
+                                        <option value="local">Local</option>
+
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="inputUsername" class="col-sm-2 control-label">Όνομα χρήστη</label>
                                 <div class="col-sm-8">
@@ -71,7 +90,7 @@
 
             </div>
         </div>
-        
+
         <%-- Include nessecary scripts --%>
         <%@ include file="static/endbody.jsp" %>
     </body>

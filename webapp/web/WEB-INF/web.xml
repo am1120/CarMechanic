@@ -13,6 +13,14 @@
             E:\tomcat\apache-tomcat-8.0.30\webapps\data
         </param-value>
     </context-param>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error-404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/error-401.jsp</location>
+    </error-page>
     <display-name>CarMechanic</display-name>
     <servlet>
         <servlet-name>searchservlet</servlet-name>
@@ -66,6 +74,10 @@
         <servlet-name>SendMessage</servlet-name>
         <servlet-class>servlets.SendMessage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateSearchPageServlet</servlet-name>
+        <servlet-class>servlets.UpdateSearchPageServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>searchservlet</servlet-name>
         <url-pattern>/searchservlet</url-pattern>
@@ -117,6 +129,10 @@
     <servlet-mapping>
         <servlet-name>SendMessage</servlet-name>
         <url-pattern>/SendMessage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateSearchPageServlet</servlet-name>
+        <url-pattern>/UpdateSearchPageServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

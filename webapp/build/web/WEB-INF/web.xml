@@ -13,6 +13,14 @@
             E:\tomcat\apache-tomcat-8.0.30\webapps\data
         </param-value>
     </context-param>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error-404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/error-401.jsp</location>
+    </error-page>
     <display-name>CarMechanic</display-name>
     <servlet>
         <servlet-name>searchservlet</servlet-name>
@@ -32,7 +40,7 @@
     </servlet>
     <servlet>
         <servlet-name>UserProfileServlet</servlet-name>
-        <servlet-class>UserProfile</servlet-class>
+        <servlet-class>servlets.UserProfile</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>logout</servlet-name>
@@ -57,6 +65,18 @@
     <servlet>
         <servlet-name>InsertComment</servlet-name>
         <servlet-class>servlets.InsertComment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateProfile</servlet-name>
+        <servlet-class>servlets.UpdateProfile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SendMessage</servlet-name>
+        <servlet-class>servlets.SendMessage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateSearchPageServlet</servlet-name>
+        <servlet-class>servlets.UpdateSearchPageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>searchservlet</servlet-name>
@@ -101,6 +121,18 @@
     <servlet-mapping>
         <servlet-name>InsertComment</servlet-name>
         <url-pattern>/insertcomment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateProfile</servlet-name>
+        <url-pattern>/UpdateProfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendMessage</servlet-name>
+        <url-pattern>/SendMessage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateSearchPageServlet</servlet-name>
+        <url-pattern>/UpdateSearchPageServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -5,7 +5,7 @@
             <url>src/java/database/DatabaseManager.java</url>
             <bookmark id="2">
                 <name/>
-                <line>66</line>
+                <line>67</line>
                 <key/>
             </bookmark>
         </file>
@@ -16,16 +16,23 @@
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/web/index.jsp</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/servlets/searchresultsservlet.java</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/model/Car.java</file>
+            <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/servlets/InsertComment.java</file>
+            <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/servlets/insertproblem.java</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/servlets/searchservlet.java</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/web/problemview.jsp</file>
+            <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/web/login.jsp</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/database/DatabaseManager.java</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/servlets/loginservlet.java</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/model/Problem.java</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/servlets/CarView.java</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/web/carview.jsp</file>
+            <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/web/userprofile.jsp</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/web/WEB-INF/web.xml</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/servlets/ProblemView.java</file>
+            <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/web/css/main.css</file>
             <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/model/CarDAO.java</file>
+            <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/src/java/model/Comment.java</file>
+            <file>file:/C:/Users/Alexander/Documents/NetBeansProjects/CarMechanic/web/insertproblem.jsp</file>
         </group>
     </open-files>
 </project-private>

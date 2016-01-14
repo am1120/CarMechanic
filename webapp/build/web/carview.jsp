@@ -23,16 +23,21 @@
             //If logged in, get usrname
             String user = null;
             String uName = null;
+            String userId = null;
+            String role = null;
             if (session.getAttribute("user") != null) {
                 user = (String) session.getAttribute("user");
                 uName = (String) session.getAttribute("uName");
+                userId = "" + (int) session.getAttribute("userId");
+                role = (String) session.getAttribute("role");
+
         %>
         <%@ include file="static/navbarloggedin.jsp" %>
         <% } else { %>
         <%@ include file="static/navbar.jsp" %>
         <% }%>
 
-        <div class="panel panel-default center-block" style="width: 70%;">
+        <div class="panel panel-default center-block" style="width: 50%;">
             <ol class = "breadcrumb">
                 <li><a href = "index.jsp">Home</a></li>
                 <li class="active">Car :
@@ -65,47 +70,78 @@
                         </div>
                     </div>
                 </div>
+
+                <%if (role != null && role.equals("1")) { %>
                 <div class="row">
                     <div class="col-md-6 center-block">
-                        <div style="margin-right: 100px;" class="col-md-3">
-                            <a href="insertproblem?type=solved&mid=${carinfo.model_id}"><button action="insertproblem" type="button" class="btn   btn-default">Προσθήκη Λυμένου Προβλήματος</button></a>
+                        <div class="center-block col-md-3">
+                            <a href="insertproblem?type=solved&mid=${carinfo.model_id}"><button action="insertproblem" type="button" class="btn   btn-default">Προσθήκη Προβλήματος</button></a>
                         </div>
-                        <div class="col-md-3">
-                            <a href="insertproblem?type=unsolved&mid=${carinfo.model_id}"><button type="button" class="btn  btn-default">Προσθήκη Άλυτου Προβλήματος</button></a>
-                        </div>
+
                     </div>
                 </div>
+                <% }%>
 
             </div>
             <hr/>
             <div class="panel-body container-fluid">
-                <div class="row">
-                    <div class="col-md-6 center-block">
-                        <h1 style="text-align: center;">Προβλήματα</h1>
-                        <table id="problemtable" class="table table-hover">
-                            <thead>
-                                <th>ID</th><th>Περιγραφή</th><th>Λύση</th><th>Κατάσταση</th>
-                            </thead>
-                            <tbody>
-                                <c:if test="${not empty result}">
+                <div class="row center-block" style="width: 75%">
+                    <% boolean first = true; %>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <c:forEach items="${searchresult}" var="entry">
 
-                                    <c:forEach var="problem" items="${searchresult}">
-                                        <tr>
-                                            <td>${problem.p_id}</td>
-                                            <td>${problem.description}</td>
-                                            <td>${problem.solution}</td>
-                                            <td>${problem.status}</td>
-                                            <td><a href="problemview?s=${problem.p_id}">Details</a></td>
-                                        </tr>
+                            <li role="presentation" 
+                                <% if (first) {
+                                        first = false;
+                                %>class="active"<%}%>>
+                                <a href="#${entry.value.name}" aria-controls="${entry.value.name}" role="tab" data-toggle="tab">${entry.value.name}</a>
+                            </li>
+
+                        </c:forEach>
+                    </ul>
+                    <% first = true;%>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <c:forEach items="${searchresult}" var="entry2">
+
+                            <div role="tabpanel" class="tab-pane 
+                                 <% if (first) {
+                                          first = false; %>
+                                 active <%}%>" id="${entry2.value.name}">
 
 
-                                    </c:forEach>
-                                </c:if>
-                                <%-- <tr><td>Test</td><td>Test</td><td>Test</td><td>Test</td></tr> --%>
-                            </tbody>
-                        </table>
+                                <div class="col-md-6 center-block">
+                                    <h3 style="text-align: center;">Προβλήματα ${entry2.value.name}</h3>
+                                    <table id="problemtable" class="table table-hover">
+                                        <thead>
+                                        <th>ID</th><th>Περιγραφή</th><th>Λύση</th><th>Κατάσταση</th>
+                                        </thead>
+                                        <tbody>
 
+
+                                            <c:forEach var="problem" items="${entry2.value.problems}">
+                                                <tr>
+                                                    <td>${problem.p_id}</td>
+                                                    <td>${problem.description}</td>
+                                                    <td>${problem.solution}</td>
+                                                    <td>${problem.status}</td>
+                                                    <td><a href="problemview?s=${problem.p_id}">Details</a></td>
+                                                </tr>
+
+
+                                            </c:forEach>
+
+                                            <%-- <tr><td>Test</td><td>Test</td><td>Test</td><td>Test</td></tr> --%>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                        </c:forEach> 
                     </div>
+
                 </div>
             </div>
         </div>
