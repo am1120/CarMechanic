@@ -47,3 +47,28 @@ function fetchEngine(value) {
     });
 }
 
+function openSolution(){
+    console.log("test");
+    $('#solutionArea').empty();
+    $('#solutionArea').append("<textarea id=\"solutionText\" name=\"solutiontext\" class=\"form-control\" rows=\"4\"></textarea>");
+    $('#solutionArea').append("<button onclick=\"addSolution()\" type=\"button\" class=\"btn btn-default\">Προσθήκη Λύσης</button>");
+    
+}
+
+function addSolution(){
+    
+    var solutionText = $('#solutionText').val();
+    var problemId = $('#p_id').val();
+    console.log(solutionText + problemId);
+    
+    $.post('AddSolution?solution='+ solutionText + '&p_id=' + $('#p_id').val() ,function(response){
+        console.log("Result of adding solution: " +response);
+         $('#solutionArea').empty();
+         $('#solutionArea').append("<p class=\"bg-info\"> Result of adding solution: " + response + "</p>");
+                 $('#solutionArea').append("<p class=\"bg-warning\">" + solutionText + "</p>");
+                                    
+    });
+    
+    
+}
+

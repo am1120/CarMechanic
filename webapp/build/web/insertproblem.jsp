@@ -1,12 +1,11 @@
 <%-- 
     Author     : Alexander Patras
      
-    Home Page Or aka Search Page
+    Insert Problem
 --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%String serverUrl = "http://localhost:8081/searchservlet";%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -15,7 +14,7 @@
     <head>
         <%-- Include head section --%>
         <%@ include file="static/header.jsp" %>
-        <title>CarMechanic - Αρχική</title>
+        <title>CarMechanic - Προσθήκη προβλήματος</title>
     </head>
     <body>
 
@@ -49,6 +48,19 @@
                 </ol>
                 <div class="panel-body container-fluid">
                     <div class="row">
+                        <div class="form-group center-block">
+
+                            <label for="inputLogin" class="col-sm-2 center-block ontrol-label">Κατηγορία προβλήματος</label>
+                            <div class="col-sm-6 center-block">
+                                <select name="problemCategory" class="form-control">
+                                    <c:forEach items="${categories}" var="category">
+
+                                        <option value="${category.key}">${category.value}</option>
+                                    </c:forEach>
+
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-md-6 center-block">
 
 

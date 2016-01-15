@@ -94,10 +94,8 @@ public class loginservlet extends HttpServlet {
         String role = "NULL";
         int userId = -1;
 
-        DatabaseManager db = new DatabaseManager();
-
         // Check if there user in our db
-        if (!db.userExists(user)) {
+        if (!DatabaseManager.getDBM().userExists(user)) {
             // Not found, return appropriate message
             String result = "ERROR";
             String resultMessage = "Δεν υπάρχει τέτοιος χρήστης ή ο κωδικός έιναι λαθος";
@@ -116,7 +114,7 @@ public class loginservlet extends HttpServlet {
             //Succesful Login
             if (ldap.auth()) {
                 // Check in our DB
-                ResultSet rs = db.getUser(user);
+                ResultSet rs =  DatabaseManager.getDBM().getUser(user);
                 try {
                     if (rs != null) {
                         // User is already in our db
@@ -131,7 +129,7 @@ public class loginservlet extends HttpServlet {
                     } else {
                         // Not in our db, insert him
                         System.out.println("LoginServlet: Adding in our db");
-                        ResultSet addrs = db.addUser(user, ldap);
+                        ResultSet addrs =  DatabaseManager.getDBM().addUser(user, ldap);
                         if (addrs != null) {
                             userId = addrs.getInt("u_id");
                         } else {
@@ -163,7 +161,7 @@ public class loginservlet extends HttpServlet {
             }
         } else if (loginType.equalsIgnoreCase("local")) {
 
-            ResultSet rs = db.getUser(user);
+            ResultSet rs =  DatabaseManager.getDBM().getUser(user);
             try {
                 if (rs != null) {
                     // User found, check passwords

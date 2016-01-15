@@ -112,7 +112,7 @@
 
                 <%}%>
             </div>
-
+            <%if (role != null && role.equals("1")) { %>
             <div class="panel-body container-fluid">
                 <div class="row">
                     <div  class="col-md-6 center-block">
@@ -136,6 +136,7 @@
                     </div>
                 </div>
             </div>
+            <%}%>
 
             <hr/>
             <div class="panel-body container-fluid">

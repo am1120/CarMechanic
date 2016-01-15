@@ -30,6 +30,7 @@
                 <li><a href="index.jsp">Αρχική <span class="sr-only">(current)</span></a></li>
                 <li><a href="about.jsp">Πληροφορίες</a></li>
                 <li><a href="contact.jsp">Επικοινωνία</a></li>
+                <li><a href="report.jsp">Περιγραφή</a></li>
 
             </ul>
 

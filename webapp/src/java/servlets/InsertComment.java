@@ -37,10 +37,7 @@ public class InsertComment extends HttpServlet {
         
         int author = 1;
         
-        
-        DatabaseManager db = new DatabaseManager();
-        
-        db.insertComment(problemId,commentText,author);
+        DatabaseManager.getDBM().insertComment(problemId,commentText,author);
         
         response.sendRedirect("problemview?s="+problemId);
         

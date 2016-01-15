@@ -16,10 +16,6 @@ import model.CMUser;
 import model.Car;
 import model.Comment;
 import model.Problem;
-
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import model.Category;
@@ -38,24 +34,29 @@ public class DatabaseManager {
     private static boolean IS_CONNECTED = false;
 
     /* * * Database config * * */
-    private static final String DB = "jdbc:mysql://localhost:3306/car_mechanic";
-    private static final String DBUSER = "www";
-    private static final String DBPSW = "123456";
+    // Are stored in web.xml as Context Parameters, and given to constructor
+    
+   /* * * Database Connection * * */
+    private static Connection conn = null;
+    
+    /* * * Database Manager Instance * * */
+    private static DatabaseManager instance = null;
 
-    /* * * Database Connection * * */
-    Connection conn = null;
-
+    /* * * Singleton Pattern * * */
+    private DatabaseManager(){}
+    
+    
     /**
      * Constructor
      *
      * Initializes db connection
      */
-    public DatabaseManager() {
+    private DatabaseManager(String url, String username, String password) {
 
         /* * * Initialize connection to db * * */
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(DB, DBUSER, DBPSW);
+            conn = DriverManager.getConnection(url, username, password);
             IS_CONNECTED = true;
         } catch (ClassNotFoundException ex) {
             System.out.println(ex.getCause());
@@ -65,6 +66,24 @@ public class DatabaseManager {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    
+    public static void createConnection(String url, String username, String password){
+        if(instance == null){
+            instance = new DatabaseManager(url,username,password);
+        }
+    }
+    
+    public static DatabaseManager getDBM(){
+        return instance;
+    }
+    
+    public static void closeConnection(){
+        if(instance != null){
+            if(conn != null){
+                close(conn);
+            }
+        }
     }
 
     /**
@@ -628,6 +647,38 @@ public class DatabaseManager {
         return result;
 
     }
+    
+     public boolean addSolution(String problemId, String solutionText) {
+
+        // Status check
+        if (!IS_CONNECTED) {
+            return false;
+        }
+
+        try {
+            
+            PreparedStatement pstmt = conn.prepareStatement(
+            "UPDATE `car_mechanic`.`problems` SET `solution` ='"+ solutionText +"',`status` = 'SOLVED' WHERE `problems`.`p_id` ="+ problemId
+            );
+        
+            // Execute insert query
+            boolean result = pstmt.execute();
+            
+            if (result) {
+                System.out.println("ERROR: Wrong Query");
+                return false;
+            } else {
+                System.out.println("Solution was added successfully");
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("ERROR: Exception" + e.getMessage());
+            return false;
+        }
+        
+        
+     }
 
     /* * * Comments methods * * */
     public List<Comment> getComments(int problemId) {
@@ -700,16 +751,17 @@ public class DatabaseManager {
     }
 
     /* * * Closing methods * * */
-    public static void close(Connection connection) {
+    private static void close(Connection connection) {
         if (connection != null) {
             try {
                 connection.close();
             } catch (SQLException e) {
+                 e.printStackTrace();
             }
         }
     }
 
-    public static void close(Statement statement) {
+    private static void close(Statement statement) {
         if (statement != null) {
             try {
                 statement.close();
@@ -718,7 +770,7 @@ public class DatabaseManager {
         }
     }
 
-    public static void close(ResultSet resultSet) {
+    private static void close(ResultSet resultSet) {
         if (resultSet != null) {
             try {
                 resultSet.close();

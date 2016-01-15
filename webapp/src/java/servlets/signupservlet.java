@@ -72,10 +72,8 @@ public class signupservlet extends HttpServlet {
         String passVerify = request.getParameter("passVerify");
         String email = request.getParameter("email");
 
-        // Open db connection
-        DatabaseManager db = new DatabaseManager();
 
-        if (db.userExists(username)) {
+        if ( DatabaseManager.getDBM().userExists(username)) {
             String result = "ERROR";
             String resultMessage = "Αυτός ο χρήστης υπάρχει ήδη";
             request.setAttribute("result", result);
@@ -94,7 +92,7 @@ public class signupservlet extends HttpServlet {
                 CMUser newUser = new CMUser(-1, username, uname, passwordHashed, email, 1, "REGULAR", "NULL", "Not Available");
 
                 // Add new User
-                ResultSet rs = db.addUser(newUser);
+                ResultSet rs =  DatabaseManager.getDBM().addUser(newUser);
 
                 if (rs == null) {//success
                     //newUser.setUser_id(rs.getInt("u_id"));

@@ -1,7 +1,7 @@
 <%-- 
     Author     : Alexander Patras
      
-    Home Page Or aka Search Page
+   
 --%>
 <%@page isErrorPage="true" %>
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>

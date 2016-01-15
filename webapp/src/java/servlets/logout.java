@@ -1,26 +1,25 @@
+package servlets;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlets;
 
-import database.DatabaseManager;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Alexander
  */
-public class UpdateSearchPageServlet extends HttpServlet {
+public class logout extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,7 +32,19 @@ public class UpdateSearchPageServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet logout</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet logout at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -48,41 +59,7 @@ public class UpdateSearchPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String fetch = request.getParameter("fetch");
-        
-        if(fetch.equals("models")){
-            String maker_id = request.getParameter("maker_id");
-
-            Map<Integer,String> result =  DatabaseManager.getDBM().getModels(maker_id);
-
-            request.setAttribute("models", result);
-
-            RequestDispatcher view = request
-                    .getRequestDispatcher("static/carmodels.jsp");
-            view.forward(request, response);
-        }else if(fetch.equals("years")){
-            String model_id = request.getParameter("model_id");
-            
-            Map<Integer,String> result = DatabaseManager.getDBM().getYears(model_id);
-            
-            request.setAttribute("years", result);
-            RequestDispatcher view = request
-                    .getRequestDispatcher("static/caryears.jsp");
-            view.forward(request, response);
-        }else if(fetch.equals("engine")){
-             String model_id = request.getParameter("model_id");
-            
-            Map<Integer,String> result = DatabaseManager.getDBM().getEngine(model_id);
-            
-            request.setAttribute("engines", result);
-            RequestDispatcher view = request
-                    .getRequestDispatcher("static/carengines.jsp");
-            view.forward(request, response);
-        }
-        
-        
-        
+       // processRequest(request, response);
     }
 
     /**
@@ -96,7 +73,19 @@ public class UpdateSearchPageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        Cookie[] cook = request.getCookies();
+
+        for(int i=0; i<cook.length;i++){
+            cook[i].setMaxAge(0);
+            response.addCookie(cook[i]);
+        }
+
+        //invalidate the session if exists
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
+        }
+        response.sendRedirect("index.jsp");
     }
 
     /**

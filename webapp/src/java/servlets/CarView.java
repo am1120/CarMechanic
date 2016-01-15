@@ -40,14 +40,12 @@ public class CarView extends HttpServlet {
         
         int model_id = Integer.parseInt(request.getParameter("s"));
         
-        DatabaseManager db = new DatabaseManager();
-        
         Map<Integer,Category> result;
         //Get problems for one car
-        result = db.getProblems(model_id);
+        result = DatabaseManager.getDBM().getProblems(model_id);
         
         // Get Car info
-        Car carInfo = db.getCar(model_id);
+        Car carInfo = DatabaseManager.getDBM().getCar(model_id);
         
         if (result != null) {
             

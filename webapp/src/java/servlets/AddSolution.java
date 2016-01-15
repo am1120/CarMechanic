@@ -3,21 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package servlets;
 
+import database.DatabaseManager;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Alexander
  */
-public class logout extends HttpServlet {
+public class AddSolution extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,19 +33,7 @@ public class logout extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet logout</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet logout at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -57,7 +48,11 @@ public class logout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       // processRequest(request, response);
+        
+        
+        
+        
+        
     }
 
     /**
@@ -71,19 +66,15 @@ public class logout extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Cookie[] cook = request.getCookies();
-
-        for(int i=0; i<cook.length;i++){
-            cook[i].setMaxAge(0);
-            response.addCookie(cook[i]);
+        String solutionText = request.getParameter("solution");
+        String problemId = request.getParameter("p_id");
+            
+            
+        try (PrintWriter out = response.getWriter()) {
+           boolean result = DatabaseManager.getDBM().addSolution(problemId, solutionText);
+            if(result) out.println("Solution added succesfully");
+            else out.println("Solution was not added");
         }
-
-        //invalidate the session if exists
-        HttpSession session = request.getSession(false);
-        if(session != null){
-            session.invalidate();
-        }
-        response.sendRedirect("index.jsp");
     }
 
     /**

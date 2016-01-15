@@ -38,16 +38,16 @@ public class ProblemView extends HttpServlet {
         
         int p_id = Integer.parseInt(request.getParameter("s"));
         
-        DatabaseManager db = new DatabaseManager();
+       
        Problem result;
         //Get problem details
-        result = db.getProblemDetails(p_id);
+        result = DatabaseManager.getDBM().getProblemDetails(p_id);
         
         // Get Car info
-        Car carInfo = db.getCar(result.getModel_id());
+        Car carInfo = DatabaseManager.getDBM().getCar(result.getModel_id());
         
         // Get any comments
-        List<Comment> comments = db.getComments(result.getP_id());
+        List<Comment> comments =  DatabaseManager.getDBM().getComments(result.getP_id());
         
         if (result != null) {
             

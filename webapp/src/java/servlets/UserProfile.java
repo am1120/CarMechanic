@@ -37,11 +37,10 @@ public class UserProfile extends HttpServlet {
 
         String user_id = request.getParameter("id");
 
-        DatabaseManager db = new DatabaseManager();
 
         List<Problem> result;
         //Get problems for this user
-        result = db.getUserProblems(Integer.parseInt(user_id));
+        result =  DatabaseManager.getDBM().getUserProblems(Integer.parseInt(user_id));
 
         if (result != null) {
 

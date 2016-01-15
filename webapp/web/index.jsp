@@ -35,7 +35,7 @@
 
     <sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver"
                        url="jdbc:mysql://localhost/car_mechanic"
-                       user="root"  password=""/>
+                       user="www"  password="123456"/>
 
     <sql:query dataSource="${snapshot}" var="result">
         SELECT * from car_maker;

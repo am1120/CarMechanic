@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -66,13 +67,16 @@ public class insertproblem extends HttpServlet {
         String type = request.getParameter("type");
         int mid = Integer.parseInt(request.getParameter("mid"));
 
-        DatabaseManager db = new DatabaseManager();
 
         // Get Car info
-        Car carInfo = db.getCar(mid);
+        Car carInfo =  DatabaseManager.getDBM().getCar(mid);
+        
+        // Get problem categories
+        Map<Integer, String> categories =  DatabaseManager.getDBM().getProblemCategories();
 
         request.setAttribute("result", "ok");
         request.setAttribute("carinfo", carInfo);
+        request.setAttribute("categories",categories);
 
         if (type.equalsIgnoreCase("solved")) { //solved problem
 
@@ -104,6 +108,7 @@ public class insertproblem extends HttpServlet {
         String descriptionText = request.getParameter("descriptiontext");
         String solutionText = request.getParameter("solutiontext");
         String model_id = request.getParameter("modelId");
+        String problemCategory = request.getParameter("problemCategory");
         String fileName = "NULL";
         
         HttpSession session = request.getSession();
@@ -120,8 +125,7 @@ public class insertproblem extends HttpServlet {
         
         
         // Insert problem
-        DatabaseManager db = new DatabaseManager();
-        db.insertProblem(model_id, descriptionText, solutionText, fileName,(int)session.getAttribute("userId"),"1");
+         DatabaseManager.getDBM().insertProblem(model_id, descriptionText, solutionText, fileName,(int)session.getAttribute("userId"),problemCategory);
         
        request.setAttribute("s", model_id);
        RequestDispatcher view = request
@@ -144,7 +148,7 @@ public class insertproblem extends HttpServlet {
         OutputStream outputStream = null;
 
         try {
-
+            
             // write the inputStream to a FileOutputStream
             outputStream
                     = new FileOutputStream(file);

@@ -13,9 +13,6 @@
             E:\tomcat\apache-tomcat-8.0.30\webapps\data
         </param-value>
     </context-param>
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
     <listener>
         <listener-class>listeners.ContextListener</listener-class>
     </listener>

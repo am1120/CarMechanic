@@ -1,7 +1,7 @@
 <%-- 
     Author     : Alexander Patras
      
-    Home Page Or aka Search Page
+   
 --%>
 
 <%@page isErrorPage="true" %>

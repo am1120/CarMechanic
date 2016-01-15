@@ -13,6 +13,21 @@
             E:\tomcat\apache-tomcat-8.0.30\webapps\data
         </param-value>
     </context-param>
+    <listener>
+        <listener-class>listeners.ContextListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>dbUrl</param-name>
+        <param-value>jdbc:mysql://localhost:3306/car_mechanic</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbUserName</param-name>
+        <param-value>www</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbPassword</param-name>
+        <param-value>123456</param-value>
+    </context-param>
     <error-page>
         <error-code>404</error-code>
         <location>/error-404.jsp</location>
@@ -44,7 +59,7 @@
     </servlet>
     <servlet>
         <servlet-name>logout</servlet-name>
-        <servlet-class>logout</servlet-class>
+        <servlet-class>servlets.logout</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>searchresultsservlet</servlet-name>
@@ -77,6 +92,10 @@
     <servlet>
         <servlet-name>UpdateSearchPageServlet</servlet-name>
         <servlet-class>servlets.UpdateSearchPageServlet</servlet-class>
+    </servlet>
+     <servlet>
+        <servlet-name>AddSolution</servlet-name>
+        <servlet-class>servlets.AddSolution</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>searchservlet</servlet-name>
@@ -133,6 +152,10 @@
     <servlet-mapping>
         <servlet-name>UpdateSearchPageServlet</servlet-name>
         <url-pattern>/UpdateSearchPageServlet</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>AddSolution</servlet-name>
+        <url-pattern>/AddSolution</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

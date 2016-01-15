@@ -1,12 +1,11 @@
 <%-- 
     Author     : Alexander Patras
      
-    Home Page Or aka Search Page
+   Problem View
 --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%String serverUrl = "http://localhost:8081/searchservlet";%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -15,7 +14,7 @@
     <head>
         <%-- Include head section --%>
         <%@ include file="static/header.jsp" %>
-        <title>CarMechanic - Αρχική</title>
+        <title>CarMechanic - Προβολή προβλήματος</title>
     </head>
     <body>
 
@@ -96,9 +95,7 @@
 
                     <div class="row">
                         <div class="col-md-6 center-block">
-                            <div style="margin-right: 100px;" class="col-md-3">
-                                <a href="addsolution"><button type="button" class="btn   btn-default">Προσθήκη Λύσης</button></a>
-                            </div>
+
                             <form action="uploadphoto">
                                 <input type="hidden" name="problemId" value="${searchresult.p_id}">
                                 <input type="file" name="pic" accept="image/*" >
@@ -115,21 +112,31 @@
 
                 <%}%>
             </div>
-
+            <%if (role != null && role.equals("1")) { %>
             <div class="panel-body container-fluid">
                 <div class="row">
-                    <div class="col-md-6 center-block">
+                    <div  class="col-md-6 center-block">
 
                         <c:if test="${not empty result}">
                             <h3 style="text-align:center"> Λύση </h3>
-                            <p class="bg-warning">
-                                <c:out value="${searchresult.solution}"/>
-                            </p>
+                            <input name="p_id" id="p_id" type="hidden" value="${searchresult.p_id}"></input>
+                            <c:if test="${searchresult.status == 'SOLVED'}">
+                                <p class="bg-warning">
+                                    <c:out value="${searchresult.solution}"/>
+                                </p>
+                            </c:if>
+                            <c:if test="${searchresult.status == 'UNSOLVED'}">
+                            <div id="solutionArea" class="center-block">
+                                
+                                <button onclick="openSolution()" type="button" class="btn   btn-default">Προσθήκη Λύσης</button>
+                            </div>
+                            </c:if>
                         </c:if>
 
                     </div>
                 </div>
             </div>
+            <%}%>
 
             <hr/>
             <div class="panel-body container-fluid">

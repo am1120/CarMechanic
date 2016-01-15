@@ -66,9 +66,9 @@ public class searchservlet extends HttpServlet {
 
             String[] arguments = searchString.split("\\s");
 
-            DatabaseManager db = new DatabaseManager();
+            
 
-            result = db.searchCars(arguments);
+            result = DatabaseManager.getDBM().searchCars(arguments);
 
         }
 
@@ -88,9 +88,8 @@ public class searchservlet extends HttpServlet {
            
             //try {
 
-            DatabaseManager db = new DatabaseManager();
-
-            result = db.searchCars(maker, model, year, engine);
+          
+            result = DatabaseManager.getDBM().searchCars(maker, model, year, engine);
             /*Using PRG Pattern.
              * Instead of forwarding from doPost() method, we are doing a
              * redirection to avoid duplicate form submission.
