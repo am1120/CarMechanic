@@ -48,6 +48,19 @@
                 </ol>
                 <div class="panel-body container-fluid">
                     <div class="row">
+                        <div class="form-group center-block">
+
+                            <label for="inputLogin" class="col-sm-2 center-block ontrol-label">Κατηγορία προβλήματος</label>
+                            <div class="col-sm-6 center-block">
+                                <select name="problemCategory" class="form-control">
+                                    <c:forEach items="${categories}" var="category">
+
+                                        <option value="${category.key}">${category.value}</option>
+                                    </c:forEach>
+
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-md-6 center-block">
 
 

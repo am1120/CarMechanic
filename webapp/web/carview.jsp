@@ -48,8 +48,8 @@
             </ol>
             <div class="panel-body container-fluid">
                 <div class="row">
-                    <div class="col-md-6 center-block">
-                        <h1 style="text-align: center;">Πληροφορίες μοντέλου</h1>
+                    <div class="col-md-10 center-block">
+                        <h2 style="margin-bottom: 40px; text-align: center;">Πληροφορίες μοντέλου</h2>
                         <div class="col-md-3 pull-left">
                             <a href="index.jsp"><button type="button" class="btn  center-block btn-default">Πίσω</button>
                             </a>
@@ -73,8 +73,8 @@
                 <%if (role != null && role.equals("1")) { %>
                 <div class="row">
                     <div class="col-md-6 center-block">
-                        <div class="center-block col-md-3">
-                            <a href="insertproblem?type=solved&mid=${carinfo.model_id}"><button action="insertproblem" type="button" class="btn   btn-default">Προσθήκη Προβλήματος</button></a>
+                        <div class="center-block">
+                            <a href="insertproblem?type=solved&mid=${carinfo.model_id}"><button action="insertproblem" type="button" class="btn center-block btn-default">Προσθήκη Προβλήματος</button></a>
                         </div>
 
                     </div>
@@ -84,10 +84,10 @@
             </div>
             <hr/>
             <div class="panel-body container-fluid">
-                <div class="row center-block" style="width: 75%">
+                <div class="row center-block">
                     <% boolean first = true; %>
                     <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" role="tablist">
+                    <ul class="nav nav-tabs nav-justified" role="tablist">
                         <c:forEach items="${searchresult}" var="entry">
 
                             <li role="presentation" 
