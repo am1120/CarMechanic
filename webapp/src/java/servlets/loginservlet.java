@@ -95,7 +95,7 @@ public class loginservlet extends HttpServlet {
         int userId = -1;
 
         // Check if there user in our db
-        if (!DatabaseManager.getDBM().userExists(user)) {
+        if (!DatabaseManager.getDBM().userExists(user) && loginType.equals("local")) {
             // Not found, return appropriate message
             String result = "ERROR";
             String resultMessage = "Δεν υπάρχει τέτοιος χρήστης ή ο κωδικός έιναι λαθος";
